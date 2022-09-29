@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\CarRepository;
+use DateTime;
+use DateInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CarRepository;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
 class Car
@@ -20,17 +22,11 @@ class Car
     #[ORM\Column(length: 255)]
     private ?string $Model = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Category = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $FirstRegistration = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $TechnicalControl = null;
+    #[ORM\Column()]
+    private ?int $Price;
 
     #[ORM\Column(nullable: true)]
-    private ?int $mileage = null;
+    private ?int $Mileage = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Energy = null;
@@ -65,14 +61,26 @@ class Car
     #[ORM\Column(nullable: true)]
     private ?float $Consumption = null;
 
-    #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    private array $Options = [];
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $created_at = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updated_at = null;
+
+    #[ORM\ManyToOne(inversedBy: 'cars')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $Category = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $FirstRegistration = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $TechnicalControl = null;
+
+    public function __construct()
+    {
+        $this->setCreatedAt = new \DateTime('now');
+    }
 
     public function getId(): ?int
     {
@@ -103,50 +111,27 @@ class Car
         return $this;
     }
 
-    public function getCategory(): ?string
+    public function getPrice(): ?int
     {
-        return $this->Category;
+        return $this->Price;
     }
 
-    public function setCategory(?string $Category): self
+    public function setPrice(?int $price): self
     {
-        $this->Category = $Category;
+        $this->Price = $price;
 
         return $this;
     }
 
-    public function getFirstRegistration(): ?\DateTimeInterface
-    {
-        return $this->FirstRegistration;
-    }
-
-    public function setFirstRegistration(?\DateTimeInterface $FirstRegistration): self
-    {
-        $this->FirstRegistration = $FirstRegistration;
-
-        return $this;
-    }
-
-    public function getTechnicalControl(): ?\DateTimeInterface
-    {
-        return $this->TechnicalControl;
-    }
-
-    public function setTechnicalControl(?\DateTimeInterface $TechnicalControl): self
-    {
-        $this->TechnicalControl = $TechnicalControl;
-
-        return $this;
-    }
 
     public function getMileage(): ?int
     {
-        return $this->mileage;
+        return $this->Mileage;
     }
 
-    public function setMileage(?int $mileage): self
+    public function setMileage(?int $Mileage): self
     {
-        $this->mileage = $mileage;
+        $this->Mileage = $Mileage;
 
         return $this;
     }
@@ -283,17 +268,6 @@ class Car
         return $this;
     }
 
-    public function getOptions(): array
-    {
-        return $this->Options;
-    }
-
-    public function setOptions(?array $Options): self
-    {
-        $this->Options = $Options;
-
-        return $this;
-    }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -315,6 +289,42 @@ class Car
     public function setUpdatedAt(?\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getCategory(): ?category
+    {
+        return $this->Category;
+    }
+
+    public function setCategory(?category $Category): self
+    {
+        $this->Category = $Category;
+
+        return $this;
+    }
+
+    public function getFirstRegistration(): ?\DateTimeInterface
+    {
+        return $this->FirstRegistration;
+    }
+
+    public function setFirstRegistration(?\DateTimeInterface $FirstRegistration): self
+    {
+        $this->FirstRegistration = $FirstRegistration;
+
+        return $this;
+    }
+
+    public function getTechnicalControl(): ?\DateTimeInterface
+    {
+        return $this->TechnicalControl;
+    }
+
+    public function setTechnicalControl(?\DateTimeInterface $TechnicalControl): self
+    {
+        $this->TechnicalControl = $TechnicalControl;
 
         return $this;
     }
