@@ -6,14 +6,17 @@ use DateTime;
 use App\Entity\Car;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 
 class CarCrudController extends AbstractCrudController
 {
@@ -42,7 +45,9 @@ class CarCrudController extends AbstractCrudController
             TextField::new('Model')                     ->setLabel('Modèle'),
             AssociationField::new('Category')           ->setLabel('Catégorie'),
             IntegerField::new('Price')                  ->setLabel('Prix'),
+            TextField::new('imageFile')->setFormType(VichImageType::class)->onlyWhenCreating(),
             DateField::new('createdAt')                 ->setLabel('Date de création')->hideOnForm(),
+            ImageField::new('imageName')->setBasePath('/images/cars')->onlyOnIndex(),
             DateField::new('First_Registration')        ->setLabel('Date de mise en circulation')    ->hideOnIndex(),
             DateField::new('Technical_Control')         ->setLabel('Date du controle tech.')     ->hideOnIndex(),
             IntegerField::new('Mileage')                ->setLabel('Kilomètrage')               ->hideOnIndex(),
